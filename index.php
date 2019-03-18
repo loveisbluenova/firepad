@@ -88,6 +88,7 @@
                 } else {
                     console.log("oops, something wrong.")
                 }
+
             };
             xhr.onerror = function() {
                 console.log("cannot connect to server.");
@@ -97,6 +98,7 @@
             xhr.send(file);
 
           }
+
         }
         document.getElementById("firepad-container").addEventListener("paste", pasteHandler);
         function pasteHandler(e) {
@@ -141,36 +143,7 @@
           }
       }
         
-        if (firepad.isHistoryEmpty()) {
-          firepad.setHtml(
-              '<span style="font-size: 24px;">Rich-text editing with <span style="color: red">Firepad!</span></span><br/>\n' +
-              '<br/>' +
-              '<div style="font-size: 18px">' +
-              'Supports:<br/>' +
-              '<ul>' +
-                '<li>Different ' +
-                  '<span style="font-family: impact">fonts,</span>' +
-                  '<span style="font-size: 24px;"> sizes, </span>' +
-                  '<span style="color: blue">and colors.</span>' +
-                '</li>' +
-                '<li>' +
-                  '<b>Bold, </b>' +
-                  '<i>italic, </i>' +
-                  '<u>and underline.</u>' +
-                '</li>' +
-                '<li>Lists' +
-                  '<ol>' +
-                    '<li>One</li>' +
-                    '<li>Two</li>' +
-                  '</ol>' +
-                '</li>' +
-                '<li>Undo / redo</li>' +
-                '<li>Cursor / selection synchronization.</li>' +
-                '<li><checkbox></checkbox> It supports customized entities.</li>' +
-                '<li>And it\'s all fully collaborative!</li>' +
-              '</ul>' +
-              '</div>');
-        }
+        
       });
       // An example of a complex custom entity.
       firepad.registerEntity('checkbox', {
