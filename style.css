@@ -1,0 +1,26 @@
+#firepad-container{
+  animation: animatezoom 1s
+}
+@keyframes animatezoom {
+  from {transform: scale(0)} 
+  to {transform: scale(1)}
+}
+.firepad-toolbar{
+	background-color: #0000FF
+}
+.CodeMirror{
+	background-color: #6495ED
+}
+.firepad-tb-bold, .firepad-tb-italic, .firepad-tb-underline, 
+.firepad-tb-strikethrough, .firepad-tb-list, .firepad-tb-list-2, 
+.firepad-tb-numbered-list, .firepad-tb-paragraph-left, 
+.firepad-tb-paragraph-center, .firepad-tb-paragraph-right, 
+.firepad-tb-paragraph-justify, .firepad-tb-menu, .firepad-tb-link, 
+.firepad-tb-undo, .firepad-tb-redo, .firepad-tb-box-add, .firepad-tb-box-remove, 
+.firepad-tb-print, .firepad-tb-indent-decrease, .firepad-tb-indent-increase, 
+.firepad-tb-insert-image, .firepad-tb-bubble{
+	color:black
+}
+.firepad-btn-group > .firepad-btn:last-child{
+	color:black
+}
