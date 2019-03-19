@@ -37,11 +37,10 @@
 
 <body onload="init()">
   <div id="firepad-container"></div>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script>
 
-    
-    function init() {
+     function init() {
       //// Initialize Firebase.
       //// TODO: replace with your Firebase project configuration.
       var config = {
@@ -59,46 +58,89 @@
           { richTextToolbar: true, richTextShortcuts: true });
       //// Initialize contents.
       firepad.on('ready', function() {
+
         var toolbar_warp = document.getElementsByClassName("firepad-toolbar-wrapper");
-        var upload_btn = '<div class="firepad-btn-group"><a class="firepad-btn" id="upload-image"><span class="firepad-tb-upload-image">Upload</span></a></div>';
+        var upload_btn = '<div class="firepad-btn-group"><a class="firepad-btn" id="upload-image"><span class="firepad-tb-upload-image">Upload</span><input type="file" id="upload_file" style="display: none"></a></div>';
         var div = document.createElement('div');
         div.innerHTML = upload_btn.trim();
         var upload_btn_dom = div.firstChild;
         toolbar_warp[0].appendChild(upload_btn_dom);
         document.getElementById("upload-image").addEventListener("click", uploadImages);
-        function uploadImages(e) {
-          var firepad_html = firepad.getHtml();
-          var firedom = document.createElement('div');
-          firedom.innerHTML = firepad_html.trim();
-          var firepad_dom = firedom.firstChild;
-          var imgs = firepad_dom.getElementsByTagName('img');
-          for (var i = 0; i < imgs.length; i++) {
-            var img = imgs[i];
-            var dataurl = img.currentSrc;
-            var blob = dataURLtoBlob(dataurl);
-            
-            var filename = Math.floor((1 + Math.random()) * 0x10000).toString(16)+".png";
-
-            var file = new File([blob], filename);
-            console.log(file);
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function() {
-                if (xhr.status == 200) {
-                    console.log("uploaded.");
-                } else {
-                    console.log("oops, something wrong.")
+        $('.firepad-tb-insert-image').parent().parent().hide();
+        $('#upload_file').change(function(){
+            var file_data = $('#upload_file').prop('files')[0];   
+            var form_data = new FormData();                  
+            form_data.append('file', file_data);
+            $.ajax({
+                url: 'upload1.php', // point to server-side PHP script 
+                dataType: 'text',  // what to expect back from the PHP script, if anything
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,                         
+                type: 'post',
+                success: function(php_script_response){
+                    firepad.insertEntity('img', { 
+                      'src' : '/uploads/'+php_script_response,
+                    });
                 }
+             });
+        });
 
-            };
-            xhr.onerror = function() {
-                console.log("cannot connect to server.");
-            };
-            xhr.open("POST", "upload.php?filename="+filename, true);
-            xhr.setRequestHeader("Content-Type", file.type);
-            xhr.send(file);
+        function uploadImages(e) {
+          debugger;
 
+          $('#upload_file').trigger('click');
+          // var firepad_html = firepad.getHtml();
+          // var firedom = document.createElement('div');
+          // firedom.innerHTML = firepad_html.trim();
+          // var firepad_dom = firedom.firstChild;
+          // var imgs = firepad_dom.getElementsByTagName('img');
+          // for (var i = 0; i < imgs.length; i++) {
+          //   var img = imgs[i];
+          //   var dataurl = img.currentSrc;
+          //   var blob = dataURLtoBlob(dataurl);
+            
+          //   var filename = Math.floor((1 + Math.random()) * 0x10000).toString(16)+".png";
+
+          //   var file = new File([blob], filename);
+          //   console.log(file);
+          //   var xhr = new XMLHttpRequest();
+          //   xhr.onload = function() {
+          //       if (xhr.status == 200) {
+          //           console.log("uploaded.");
+          //       } else {
+          //           console.log("oops, something wrong.")
+          //       }
+
+          //   };
+          //   xhr.onerror = function() {
+          //       console.log("cannot connect to server.");
+          //   };
+          //   xhr.open("POST", "upload.php?filename="+filename, true);
+          //   xhr.setRequestHeader("Content-Type", file.type);
+          //   xhr.send(file);
+
+          // }
+
+        }
+        //document.getElementById("submitbtn").addEventListener("click", insertImage);
+        function insertImage(e) {
+          var imageurl = document.getElementById('img').value;
+          console.log(imageurl);
+          var file = new File(imageurl);
+          if (file != null) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+              firepad.insertEntity('img', { 
+                'src' : reader.result,
+              });
+            }, false);
+
+            if (file) {
+              reader.readAsDataURL(file);
+            }
           }
-
         }
         document.getElementById("firepad-container").addEventListener("paste", pasteHandler);
         function pasteHandler(e) {
