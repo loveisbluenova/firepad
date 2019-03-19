@@ -21,3 +21,6 @@
 .firepad-tb-insert-image, .firepad-tb-bubble{
 	color:black
 }
+.firepad-btn-group > .firepad-btn:last-child{
+	color:black
+}
